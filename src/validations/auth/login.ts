@@ -7,8 +7,9 @@ const validate = [
         .escape()
         .trim()
         .isLength({
-            min: 1
+            min: 5
         })
+    .isEmail()
         .withMessage(
             commonError.REQUIRED.replace("{fieldname}", "Email/Username")
         ),
@@ -16,7 +17,7 @@ const validate = [
         .escape()
         .trim()
         .isLength({
-            min: 1
+            min: 6
         })
         .withMessage(commonError.REQUIRED.replace("{fieldname}", "Password"))
 ];

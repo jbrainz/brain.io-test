@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
 
 import loginValidation from "../validations/auth/login";
-import { googleLogin, login, logout, refresh } from "../controllers/auth";
+import { getUserDetails, googleLogin, login, logout, refresh, updateUserProfile } from "../controllers/auth";
 import { validate } from "../controllers/utils";
 import { isAuthenticated } from "../middlewares/auth";
 
@@ -18,6 +18,17 @@ router.post(
         login(request).then(next).catch(next);
     }
 );
+
+router
+  .route('/secure')
+  .get(isAuthenticated("member"), (request: Request, response: Response, next: NextFunction) => {
+    getUserDetails(request).then(next).catch(next);
+  })
+
+router
+  .patch("/update-profile",isAuthenticated("member"), (request: Request, response: Response, next: NextFunction) => {
+    updateUserProfile(request).then(next).catch(next);
+  })
 
 router.post(
     "/google",

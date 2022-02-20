@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { request, Request } from "express";
 
 import User from "../models/user";
 import {
@@ -22,16 +22,43 @@ export const googleLogin = async (request: Request) => {
 };
 
 export const login = async (request: Request) => {
+  const {email, password} = request.body
     try {
         const info = await findAndGenerateToken(
-            request.body.email,
-            request.body.password ?? ""
+           email,
+           password ?? ""
         );
         request.responseData = info;
     } catch (error: any) {
         throw error;
     }
 };
+
+export const getUserDetails = async (req: any) => {
+  try {
+    const user: any = await User.findById(req.user._id)
+    if (user) {
+      request.responseData = user;
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateUserProfile = async (req: any) => {
+  try {
+    const user: any = await User.findById(req.user._id)
+  if (user) {
+    user.profile.first_name = req.body.first_name || user.profile.first_name
+    user.profile.last_name = req.body.last_name || user.profile.last_name
+
+    const updatedUser = await user.save()
+    req.responseData = updatedUser;
+  }
+  } catch (error) {
+    throw error
+  }
+}
 
 export const logout = async (request: Request) => {
     try {
